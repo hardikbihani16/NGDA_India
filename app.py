@@ -5,7 +5,12 @@ from auth import show_login, logout
 from i18n import language_selector, t
 import plotly.graph_objects as go
 from datetime import date, timedelta, datetime
+from whatsapp import show_whatsapp
 
+show_whatsapp()
+
+WHATSAPP_CHANNEL_URL = "https://whatsapp.com/channel/YOUR_REAL_CHANNEL_ID"
+WHATSAPP_BUSINESS_NUMBER = "27XXXXXXXXX"
 st.set_page_config(page_title="Aqua-Net | Groundwater Intelligence", page_icon="💧", layout="wide", initial_sidebar_state="expanded")
 
 # Login gate

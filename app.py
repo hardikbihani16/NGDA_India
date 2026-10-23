@@ -7,11 +7,12 @@ import plotly.graph_objects as go
 from datetime import date, timedelta, datetime
 from whatsapp import show_whatsapp
 
-show_whatsapp()
-
-WHATSAPP_CHANNEL_URL = "https://whatsapp.com/channel/YOUR_REAL_CHANNEL_ID"
-WHATSAPP_BUSINESS_NUMBER = "27XXXXXXXXX"
-st.set_page_config(page_title="Aqua-Net | Groundwater Intelligence", page_icon="💧", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(
+    page_title="Aqua-Net | Groundwater Intelligence",
+    page_icon="💧",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
 # Login gate
 if not show_login():
@@ -126,6 +127,34 @@ mode = (
     if st.session_state.user_role == "government"
     else "Community app"
 )
+
+# -------------------- Page navigation --------------------
+with st.sidebar:
+    if mode == "Government dashboard":
+        page = st.radio(
+            "NAVIGATION",
+            [
+                "Overview",
+                "Borehole registry",
+                "Verification queue",
+                "Repair management",
+                "Groundwater trends",
+            ],
+            key="_government_page",
+        )
+
+    elif mode == "Community app":
+        page = st.radio(
+            "NAVIGATION",
+            [
+                "Home",
+                "Explore boreholes",
+                "Report an issue",
+                "My contributions",
+            ],
+            key="_community_page",
+        )
+
 def page_header(eyebrow, title, sub=None):
     st.markdown(f'<div class="eyebrow">{eyebrow}</div>', unsafe_allow_html=True)
     st.title(title)

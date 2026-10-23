@@ -148,8 +148,26 @@ if mode == "Government dashboard":
         left,right=st.columns([1.55,1])
         with left:
             st.markdown('<div class="panel"><div class="panel-title">Borehole registry · Thabeng pilot view</div><div class="muted">Status markers are illustrative and geographically approximate.</div></div>',unsafe_allow_html=True)
-            fig=px.scatter_mapbox(bh,lat="lat",lon="lon",color="Status",size="People served",hover_name="Borehole",hover_data=["Community","Verification","Water trend"],color_discrete_map=status_color,zoom=10.7,height=420,size_max=20)
-            fig.update_layout(mapbox_style="carto-positron",margin=dict(l=0,r=0,t=8,b=0),paper_bgcolor="white",legend_title_text="",font=dict(color="#152f45"))
+            fig = px.scatter_map(
+    bh,
+    lat="lat",
+    lon="lon",
+    color="Status",
+    size="People served",
+    hover_name="Borehole",
+    hover_data=["Community", "Verification", "Water trend"],
+    color_discrete_map=status_color,
+    zoom=10.7,
+    height=420,
+    size_max=20,
+    map_style="carto-positron",
+)
+            fig.update_layout(
+    margin=dict(l=0, r=0, t=8, b=0),
+    paper_bgcolor="white",
+    legend_title_text="",
+    font=dict(color="#152f45"),
+)
             st.plotly_chart(fig,use_container_width=True)
         with right:
             st.markdown('<div class="panel-title">Verification & maintenance queue</div><div class="muted">Prioritise issues that need a human decision.</div><br>',unsafe_allow_html=True)

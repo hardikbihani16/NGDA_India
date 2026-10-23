@@ -1,11 +1,26 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+from auth import show_login, logout
+from i18n import language_selector, t
 import plotly.graph_objects as go
 from datetime import date, timedelta, datetime
 
 st.set_page_config(page_title="Aqua-Net | Groundwater Intelligence", page_icon="💧", layout="wide", initial_sidebar_state="expanded")
 
+# Login gate
+if not show_login():
+    st.stop()
+
+# Shared language selector
+with st.sidebar:
+    language_selector()
+
+    st.markdown("---")
+    st.caption(f"Signed in as: {st.session_state.user_role}")
+
+    if st.button(t("logout"), use_container_width=True):
+        logout()
 # Design tokens: clean civic-tech product, inspired by the supplied references
 st.markdown("""
 <style>
@@ -101,25 +116,11 @@ status_color={"Working":"#15966A","Needs maintenance":"#E76F51","Under review":"
 level_color={"Stable":"#15966A","Watch":"#E9A23B","Unknown":"#8798A7","Stress":"#E76F51"}
 
 # -------------------- Sidebar --------------------
-with st.sidebar:
-    st.markdown('<div class="brand">💧 AQUA<span>-NET</span></div><div class="brand-sub">GROUNDWATER INTELLIGENCE</div>', unsafe_allow_html=True)
-    st.markdown("<br>", unsafe_allow_html=True)
-    mode = st.radio("EXPERIENCE", ["Government dashboard", "Community app", "Aqua Fellow", "Basic phone access"], label_visibility="visible")
-    st.markdown("---")
-    if mode == "Government dashboard":
-        page = st.radio("GOVERNMENT WORKSPACE", ["Overview", "Borehole registry", "Verification queue", "Repair management", "Groundwater trends"], label_visibility="visible")
-    elif mode == "Community app":
-        page = st.radio("COMMUNITY APP", ["Home", "Explore boreholes", "Report an issue", "My contributions"], label_visibility="visible")
-    elif mode == "Aqua Fellow":
-        page = st.radio("FIELD TOOLS", ["Field dashboard", "Log a reading", "Reading history"], label_visibility="visible")
-    else:
-        page = st.radio("BASIC PHONE", ["USSD simulator", "SMS simulator", "Voice reporting"], label_visibility="visible")
-    st.markdown("---")
-    st.markdown('<div class="nav-card"><div class="muted">DEMO COMMUNITY</div><b>📍 Thabeng · South Africa</b><br><span class="muted">Illustrative pilot environment</span></div>', unsafe_allow_html=True)
-    st.markdown('<span class="chip watch">PROTOTYPE · SAMPLE DATA</span>', unsafe_allow_html=True)
-
-st.markdown('<div class="demo">⚠️ <b>Prototype mode:</b> all records, locations, readings and people are illustrative. No live government records, sensors, SMS gateway or field deployment is connected.</div>', unsafe_allow_html=True)
-
+mode = (
+    "Government dashboard"
+    if st.session_state.user_role == "government"
+    else "Community app"
+)
 def page_header(eyebrow, title, sub=None):
     st.markdown(f'<div class="eyebrow">{eyebrow}</div>', unsafe_allow_html=True)
     st.title(title)

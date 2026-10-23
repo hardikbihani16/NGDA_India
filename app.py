@@ -292,8 +292,23 @@ elif mode == "Community app":
             st.markdown(f'<div class="panel" style="margin-bottom:8px;padding:12px 16px"><b>{code}</b> &nbsp; {txt}<div class="muted">{sub}</div></div>',unsafe_allow_html=True)
     elif page == "Explore boreholes":
         page_header("AQUAMAP","Explore boreholes","Check a water point's latest status before you travel. Demo locations are approximate.")
-        fig=px.scatter_mapbox(bh,lat="lat",lon="lon",color="Status",size="People served",hover_name="Borehole",hover_data=["Community","Verification","Water trend"],color_discrete_map=status_color,zoom=10.8,height=440,size_max=18)
-        fig.update_layout(mapbox_style="carto-positron",margin=dict(l=0,r=0,t=0,b=0),paper_bgcolor="white",legend_title_text="")
+        fig = px.scatter_map(bh,
+    lat="lat",
+    lon="lon",
+    color="Status",
+    size="People served",
+    hover_name="Borehole",
+    hover_data=["Community", "Verification", "Water trend"],
+    color_discrete_map=status_color,
+    zoom=10.8,
+    height=440,
+    size_max=18,
+    map_style="carto-positron")
+
+        fig.update_layout(
+        margin=dict(l=0, r=0, t=0, b=0),
+        paper_bgcolor="white",
+        legend_title_text="" )
         st.plotly_chart(fig,use_container_width=True)
         code=st.selectbox("View a borehole",bh.Borehole.tolist(),index=bh.Borehole.tolist().index("BH-17"))
         record=bh[bh.Borehole==code].iloc[0]
